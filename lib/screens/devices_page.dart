@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/battery_test.dart';
 import '../models/sample_data.dart';
 import '../navigation.dart';
 import '../theme.dart';
@@ -160,6 +161,7 @@ class DevicesPage extends StatelessWidget {
     return ListView(
       padding: pagePadding(context),
       children: [
+        const BatteryTest(),
         // Header with the + button
         PageHeader(
           title: 'Batteries',
