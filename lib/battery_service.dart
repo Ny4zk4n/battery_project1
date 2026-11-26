@@ -1,5 +1,5 @@
 import 'package:flutter/services.dart';
-
+import 'models/battery_info.dart';
 class BatteryService  {
     static const MethodChannel _channel = MethodChannel('batteryStatsReader');
 
@@ -17,4 +17,11 @@ class BatteryService  {
       return null;
     }
   }
+  Future<BatteryInfo?> getBatteryInfo() async {
+    final Map<String, dynamic>? batteryInfoMap = await _channel.invokeMapMethod<String, dynamic>('getBatteryInfo');
+    if (batteryInfoMap == null) {
+      return null;
+    }
+    return BatteryInfo.fromMap(batteryInfoMap);
+}
 }

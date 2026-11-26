@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../battery_service.dart';
-
+import '../models/battery_info.dart';
 class BatteryTest extends StatefulWidget {
   const BatteryTest({super.key});
 
@@ -12,15 +12,18 @@ class _BatteryTestState extends State<BatteryTest> {
   String text = 'Not checked yet';
 
   Future<void> checkBattery() async {
-    final int? level = await BatteryService().getBatteryLevel();
+    final BatteryInfo? info = await BatteryService().getBatteryInfo();
 
     if (!mounted) return;
 
     setState(() {
-      if (level == null) {
+      if (info == null) {
         text = 'Battery level could not be determined';
       } else {
-        text = 'Battery level is $level%';
+        text = 'Battery level: ${info.level ?? 'Unknown'}%\n'
+            'Temperature: ${info.temperature?.toStringAsFixed(1) ?? 'Unknown'}°C\n'
+            'Voltage: ${info.voltage?.toStringAsFixed(2) ?? 'Unknown'}V\n'
+            'Status: ${info.statusText ?? 'Unknown'}';
       }
     });
   }
@@ -38,6 +41,6 @@ class _BatteryTestState extends State<BatteryTest> {
           child: const Text('Check Battery Level'),
         ),
       ],
-    );  
+    ); 
   }
 }

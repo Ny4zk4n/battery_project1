@@ -17,12 +17,15 @@ class MainActivity : FlutterActivity() {
       if ("getBatteryLevel" == call.method) {
         val level = getBatteryLevel()
         result.success(level)
+      } else if ("getBatteryInfo" == call.method) {
+        val info = getBatteryInfo()
+        result.success(info)
       } else {
-        // This method is invoked on the main thread.
-        result.notImplemented() // TODO
+        result.notImplemented()
       }
     }
   }
+
   private fun getBatteryLevel(): Int {
     val batteryStatus: Intent? = registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
     val level = batteryStatus?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
@@ -33,4 +36,19 @@ class MainActivity : FlutterActivity() {
     }
     return (level * 100) / scale
   }
-} 
+
+  private fun getBatteryInfo(): Map<String, Int> {
+    val batteryStatus: Intent? = registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+    val percentage = getBatteryLevel()
+    val batteryTemp = batteryStatus?.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, -1) ?: -1
+    val batteryVol = batteryStatus?.getIntExtra(BatteryManager.EXTRA_VOLTAGE, -1) ?: -1
+    val batteryStat = batteryStatus?.getIntExtra(BatteryManager.EXTRA_STATUS, -1) ?: -1
+
+    return mapOf(
+      "level" to percentage,
+      "temp" to batteryTemp,
+      "voltage" to batteryVol,
+      "status" to batteryStat
+    )
+  }
+}
